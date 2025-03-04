@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "stock_api"
+version = "0.1.0"
+description = "Stock Data API"
+authors = ["Justin Ozkan <jozkan2@gmail.com>"]
+readme = "README.md"
+# TODO: Rename the package/directory.
+packages = [{include = "stock_api", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "~3.12.1"
+fastapi = "^0.109.1"
+uvicorn = "^0.30.3"
+requests = "^2.28"
+cachetools = "^5.5.2"
+requests-to-curl = "^1.1.0"
+pytest-mock = "^3.10.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
