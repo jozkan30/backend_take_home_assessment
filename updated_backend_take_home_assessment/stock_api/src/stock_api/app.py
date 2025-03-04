@@ -1,8 +1,6 @@
 from fastapi import FastAPI
+from .route import router as stock_router
 
 app = FastAPI()
 
-
-@app.get("/status")
-def status():
-    return {"app": "boilerplate"}
+app.include_router(stock_router)
