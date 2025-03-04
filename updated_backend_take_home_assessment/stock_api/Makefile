@@ -7,7 +7,7 @@ test: build
 
 run: build
 	# Starts the server on port 8000 by default. This can be changed by setting UVICORN_PORT.
-	build/venv/bin/uvicorn boilerplate.app:app --reload
+	build/venv/bin/uvicorn stock_api.app:app --reload
 
 clean:
 	rm -rf build
