@@ -10,7 +10,7 @@ class AlphaVantageAPI:
         self.api_key = api_key
         self.host = "https://www.alphavantage.co/query"
         self.session = requests_cache.CachedSession(
-            "alpha_vantage_cache", expire_after=timedelta(hours=1)
+            "alpha_vantage_cache", expire_after=timedelta(minutes=10)
         )
 
     def get_stock_data(self, symbol: str, date: str):
@@ -21,7 +21,6 @@ class AlphaVantageAPI:
             "outputsize": output_size,
             "apikey": self.api_key,
         }
-
         response = self.session.get(self.host, params=params)
         if getattr(response, "from_cache", False):
             logging.info("Serving from cache")
@@ -31,6 +30,7 @@ class AlphaVantageAPI:
         data = response.json()
         time_series = data.get("Time Series (Daily)", {})
         if not time_series:
+            logging.info(data)
             raise HTTPException(status_code=response.status_code, detail=f"Could not find {symbol} at {date} - {response.content}")
         return time_series
 
@@ -69,7 +69,7 @@ class AlphaVantageAPI:
             raise ValueError(f"Invalid date format: {e}")
 
     def get_lowest_low(self, symbol: str, n: int):
-        logging.info(f'Getting lowest price from the past {n} days')
+        logging.info(f'Getting lowest price for {symbol} from the past {n} days')
         today = datetime.datetime.now().date()
         date = today.strftime("%Y-%m-%d")
         time_series = self.get_stock_data(symbol, date)
@@ -78,7 +78,7 @@ class AlphaVantageAPI:
         return {"min":lowest_low}
 
     def get_highest_high(self, symbol: str, n: int):
-        logging.info(f'Getting highest price from the past {n} days')
+        logging.info(f'Getting highest price {symbol} from the past {n} days')
         today = datetime.datetime.now().date()
         date = today.strftime("%Y-%m-%d")
         time_series = self.get_stock_data(symbol, date)
@@ -91,3 +91,12 @@ class AlphaVantageAPI:
         if time_series_dates[0] >= time_series_dates[-1]:
             return time_series_dates[:n]
         return sorted(time_series_dates, reverse=True)[:n]
+
+    def fetch_sample_data(self):
+        params = {
+            "function": "TIME_SERIES_DAILY",
+            "symbol": "IBM",
+            "apikey": "demo",
+        }
+        response = self.session.get(self.host, params=params)
+        return response.json()
