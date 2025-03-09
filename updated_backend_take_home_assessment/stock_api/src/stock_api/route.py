@@ -32,9 +32,9 @@ def lookup(symbol: str, date: str, service: AlphaVantageAPI = Depends(get_alpha_
     return service.lookup(symbol, date)
 
 @router.get("/min", dependencies=[Depends(get_api_key)])
-def lookup(symbol: str, days: int, service: AlphaVantageAPI = Depends(get_alpha_vantage_service)):
+def min(symbol: str, days: int, service: AlphaVantageAPI = Depends(get_alpha_vantage_service)):
     return service.get_lowest_low(symbol, days)
 
 @router.get("/max", dependencies=[Depends(get_api_key)])
-def lookup(symbol: str, days: int, service: AlphaVantageAPI = Depends(get_alpha_vantage_service)):
+def max(symbol: str, days: int, service: AlphaVantageAPI = Depends(get_alpha_vantage_service)):
     return service.get_highest_high(symbol, days)
